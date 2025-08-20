@@ -21,6 +21,9 @@ export function Navigation() {
       case 'admin':
         return [
           { name: "Admin Dashboard", href: "/", icon: LayoutDashboard },
+          { name: "Pack Orders", href: "/packorders", icon: Package },
+          { name: "Delivery Orders", href: "/deliveryorders", icon: Truck },
+          { name: "Manager Dashboard", href: "/manager", icon: Settings },
         ];
       case 'packaging':
         return [

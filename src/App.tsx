@@ -48,27 +48,27 @@ function AppRoutes() {
       } />
       <Route path="/packorders" element={
         <ProtectedRoute>
-          {user?.role === 'packaging' ? <PackagingDashboard /> : <Navigate to={getDefaultRoute()} />}
+          {(user?.role === 'packaging' || user?.role === 'admin') ? <PackagingDashboard /> : <Navigate to={getDefaultRoute()} />}
         </ProtectedRoute>
       } />
       <Route path="/packorder/:orderId" element={
         <ProtectedRoute>
-          {user?.role === 'packaging' ? <PackOrderDetails /> : <Navigate to={getDefaultRoute()} />}
+          {(user?.role === 'packaging' || user?.role === 'admin') ? <PackOrderDetails /> : <Navigate to={getDefaultRoute()} />}
         </ProtectedRoute>
       } />
       <Route path="/deliveryorders" element={
         <ProtectedRoute>
-          {user?.role === 'delivery' ? <DeliveryDashboard /> : <Navigate to={getDefaultRoute()} />}
+          {(user?.role === 'delivery' || user?.role === 'admin') ? <DeliveryDashboard /> : <Navigate to={getDefaultRoute()} />}
         </ProtectedRoute>
       } />
       <Route path="/deliveryorder/:orderId" element={
         <ProtectedRoute>
-          {user?.role === 'delivery' ? <DeliveryOrderDetails /> : <Navigate to={getDefaultRoute()} />}
+          {(user?.role === 'delivery' || user?.role === 'admin') ? <DeliveryOrderDetails /> : <Navigate to={getDefaultRoute()} />}
         </ProtectedRoute>
       } />
       <Route path="/manager" element={
         <ProtectedRoute>
-          {user?.role === 'manager' ? <ManagerDashboard /> : <Navigate to={getDefaultRoute()} />}
+          {(user?.role === 'manager' || user?.role === 'admin') ? <ManagerDashboard /> : <Navigate to={getDefaultRoute()} />}
         </ProtectedRoute>
       } />
       <Route path="*" element={<NotFound />} />
