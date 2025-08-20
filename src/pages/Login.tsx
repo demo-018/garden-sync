@@ -40,10 +40,10 @@ export default function Login() {
   };
 
   const demoLogins = [
-    { role: 'Admin', email: 'admin@vegdelivery.com', password: 'admin123' },
-    { role: 'Manager', email: 'manager@vegdelivery.com', password: 'manager123' },
-    { role: 'Packaging', email: 'pack1@vegdelivery.com', password: 'pack123' },
-    { role: 'Delivery', email: 'delivery1@vegdelivery.com', password: 'delivery123' },
+    { role: 'Admin', email: 'admin@indiveghub.com', password: 'admin123' },
+    { role: 'Manager', email: 'manager@indiveghub.com', password: 'manager123' },
+    { role: 'Packaging', email: 'pack1@indiveghub.com', password: 'pack123' },
+    { role: 'Delivery', email: 'delivery1@indiveghub.com', password: 'delivery123' },
   ];
 
   const quickLogin = (email: string, password: string) => {
@@ -61,7 +61,7 @@ export default function Login() {
               <Leaf className="h-8 w-8 text-primary-foreground" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-foreground">VegDelivery Admin</h1>
+          <h1 className="text-3xl font-bold text-foreground">IndiVeg Hub</h1>
           <p className="text-muted-foreground">Sign in to your account</p>
         </div>
 
