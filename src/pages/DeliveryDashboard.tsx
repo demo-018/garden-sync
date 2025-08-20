@@ -13,12 +13,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowLeft, Truck, MapPin, Phone } from "lucide-react";
+import { ArrowLeft, Truck, MapPin, Phone, CheckCircle, Clock, AlertCircle } from "lucide-react";
 
 export default function DeliveryDashboard() {
   const [orders, setOrders] = useState<Order[]>(getOrdersForDelivery());
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Calculate statistics from all orders
+  const assignedOrders = demoOrders.filter(order => order.status === 'assigned').length;
+  const deliveredOrders = demoOrders.filter(order => order.status === 'delivered').length;
+  const undeliveredOrders = demoOrders.filter(order => order.status !== 'delivered' && order.status !== 'cancelled').length;
 
   const updateOrderStatus = (orderId: string, newStatus: 'delivered' | 'cancelled') => {
     setOrders(prev => prev.filter(order => order.id !== orderId));
@@ -38,6 +43,51 @@ export default function DeliveryDashboard() {
           <Truck className="h-5 w-5" />
           <span>{orders.length} orders to deliver</span>
         </div>
+      </div>
+
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="flex items-center p-6">
+            <div className="flex items-center space-x-4">
+              <div className="p-2 bg-warning/10 rounded-full">
+                <Clock className="h-6 w-6 text-warning" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Assigned Orders</p>
+                <p className="text-2xl font-bold text-foreground">{assignedOrders}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="flex items-center p-6">
+            <div className="flex items-center space-x-4">
+              <div className="p-2 bg-success/10 rounded-full">
+                <CheckCircle className="h-6 w-6 text-success" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Delivered Orders</p>
+                <p className="text-2xl font-bold text-foreground">{deliveredOrders}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="flex items-center p-6">
+            <div className="flex items-center space-x-4">
+              <div className="p-2 bg-destructive/10 rounded-full">
+                <AlertCircle className="h-6 w-6 text-destructive" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Undelivered Orders</p>
+                <p className="text-2xl font-bold text-foreground">{undeliveredOrders}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Orders for Delivery */}
@@ -71,7 +121,12 @@ export default function DeliveryDashboard() {
                         <div className="font-medium">{order.customerName}</div>
                         <div className="text-sm text-muted-foreground flex items-center gap-1">
                           <Phone className="h-3 w-3" />
-                          {order.customerPhone}
+                          <a 
+                            href={`tel:${order.customerPhone}`}
+                            className="text-primary hover:text-primary/80 transition-colors cursor-pointer"
+                          >
+                            {order.customerPhone}
+                          </a>
                         </div>
                       </div>
                     </TableCell>
@@ -211,7 +266,12 @@ export function DeliveryOrderDetails() {
                 Customer Contact
               </h4>
               <p className="text-muted-foreground">{order.customerName}</p>
-              <p className="text-muted-foreground">{order.customerPhone}</p>
+              <a 
+                href={`tel:${order.customerPhone}`}
+                className="text-primary hover:text-primary/80 transition-colors cursor-pointer"
+              >
+                {order.customerPhone}
+              </a>
             </div>
             <div>
               <h4 className="font-medium flex items-center gap-2">
