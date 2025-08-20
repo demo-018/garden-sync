@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { Leaf } from 'lucide-react';
+import indiVegLogo from '@/assets/indiveg-logo.png';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -57,8 +58,8 @@ export default function Login() {
         {/* Logo and Title */}
         <div className="text-center space-y-2">
           <div className="flex justify-center">
-            <div className="bg-primary rounded-full p-3">
-              <Leaf className="h-8 w-8 text-primary-foreground" />
+            <div className="bg-white rounded-full p-3 shadow-lg">
+              <img src={indiVegLogo} alt="IndiVeg Hub Logo" className="h-12 w-12 object-contain" />
             </div>
           </div>
           <h1 className="text-3xl font-bold text-foreground">IndiVeg Hub</h1>
