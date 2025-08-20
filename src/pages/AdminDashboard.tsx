@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +33,7 @@ export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>(demoOrders);
   const [users, setUsers] = useState<User[]>(demoUsers);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const updateOrderStatus = (orderId: string, newStatus: OrderStatus) => {
     setOrders(prev => prev.map(order => 
@@ -131,7 +133,7 @@ export default function AdminDashboard() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => window.open(`/admin/order/${order.id}`, '_blank')}
+                        onClick={() => navigate(`/admin/order/${order.id}`)}
                       >
                         View Details
                       </Button>
