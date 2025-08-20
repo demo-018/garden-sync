@@ -127,24 +127,33 @@ export default function AdminDashboard() {
                   </TableCell>
                   <TableCell>{order.deliveryDate}</TableCell>
                   <TableCell>
-                    {order.status === 'placed' && (
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => updateOrderStatus(order.id, 'accepted')}
-                          className="bg-success text-success-foreground hover:bg-success/90"
-                        >
-                          Accept
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => updateOrderStatus(order.id, 'rejected')}
-                        >
-                          Reject
-                        </Button>
-                      </div>
-                    )}
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => window.open(`/admin/order/${order.id}`, '_blank')}
+                      >
+                        View Details
+                      </Button>
+                      {order.status === 'placed' && (
+                        <>
+                          <Button
+                            size="sm"
+                            onClick={() => updateOrderStatus(order.id, 'accepted')}
+                            className="bg-success text-success-foreground hover:bg-success/90"
+                          >
+                            Accept
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => updateOrderStatus(order.id, 'rejected')}
+                          >
+                            Reject
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -179,7 +188,7 @@ export default function AdminDashboard() {
                     <Badge variant="outline">{user.role}</Badge>
                   </TableCell>
                   <TableCell>
-                    {user.role === 'customer' && (
+                    {user.role === 'customer' ? (
                       <Select onValueChange={(value) => promoteUser(user.id, value as UserRole)}>
                         <SelectTrigger className="w-40">
                           <SelectValue placeholder="Promote to..." />
@@ -189,6 +198,14 @@ export default function AdminDashboard() {
                           <SelectItem value="delivery">Delivery Employee</SelectItem>
                         </SelectContent>
                       </Select>
+                    ) : user.role !== 'admin' && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => promoteUser(user.id, 'customer')}
+                      >
+                        Demote to Customer
+                      </Button>
                     )}
                   </TableCell>
                 </TableRow>

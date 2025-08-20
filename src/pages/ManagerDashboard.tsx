@@ -57,7 +57,44 @@ export default function ManagerDashboard() {
     // await assignOrderToDeliveryAPI(orderId, employeeId);
   };
 
-  const updateVegetablePrice = (vegId: string, field: 'currentSellingPrice' | 'minPrice' | 'maxPrice', value: number) => {
+  const [priceUpdates, setPriceUpdates] = useState<Record<string, {minPrice: number, maxPrice: number}>>({});
+
+  const updatePriceInput = (vegId: string, field: 'minPrice' | 'maxPrice', value: number) => {
+    setPriceUpdates(prev => ({
+      ...prev,
+      [vegId]: {
+        ...prev[vegId],
+        [field]: value
+      }
+    }));
+  };
+
+  const updateVegetablePrices = (vegId: string) => {
+    const updates = priceUpdates[vegId];
+    if (!updates) return;
+
+    setVegetables(prev => prev.map(veg => 
+      veg.id === vegId 
+        ? { ...veg, minPrice: updates.minPrice || veg.minPrice, maxPrice: updates.maxPrice || veg.maxPrice }
+        : veg
+    ));
+    
+    // Clear the updates for this vegetable
+    setPriceUpdates(prev => {
+      const newUpdates = { ...prev };
+      delete newUpdates[vegId];
+      return newUpdates;
+    });
+
+    toast({
+      title: "Prices Updated",
+      description: `Min and max prices updated successfully`,
+    });
+    // TODO: API call to update vegetable price
+    // await updateVegetablePriceAPI(vegId, updates);
+  };
+
+  const updateVegetablePrice = (vegId: string, field: 'currentSellingPrice', value: number) => {
     setVegetables(prev => prev.map(veg => 
       veg.id === vegId 
         ? { ...veg, [field]: value }
@@ -164,7 +201,7 @@ export default function ManagerDashboard() {
                   <TableHead>Order ID</TableHead>
                   <TableHead>Customer</TableHead>
                   <TableHead>Amount</TableHead>
-                  <TableHead>Delivery Date</TableHead>
+                  <TableHead>Delivery Address</TableHead>
                   <TableHead>Assign To</TableHead>
                 </TableRow>
               </TableHeader>
@@ -174,7 +211,7 @@ export default function ManagerDashboard() {
                     <TableCell className="font-medium">{order.id}</TableCell>
                     <TableCell>{order.customerName}</TableCell>
                     <TableCell>₹{order.totalAmount}</TableCell>
-                    <TableCell>{order.deliveryDate}</TableCell>
+                    <TableCell>{order.customerAddress}</TableCell>
                     <TableCell>
                       <Select onValueChange={(value) => assignOrderToDelivery(order.id, value)}>
                         <SelectTrigger className="w-48">
@@ -279,50 +316,43 @@ export default function ManagerDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {vegetables.map((vegetable) => (
-                <TableRow key={vegetable.id}>
-                  <TableCell className="font-medium">{vegetable.name}</TableCell>
-                  <TableCell>
-                    <Input
-                      type="number"
-                      value={vegetable.minPrice}
-                      onChange={(e) => updateVegetablePrice(vegetable.id, 'minPrice', parseFloat(e.target.value))}
-                      className="w-20"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      type="number"
-                      value={vegetable.maxPrice}
-                      onChange={(e) => updateVegetablePrice(vegetable.id, 'maxPrice', parseFloat(e.target.value))}
-                      className="w-20"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      type="number"
-                      value={vegetable.currentSellingPrice}
-                      onChange={(e) => updateVegetablePrice(vegetable.id, 'currentSellingPrice', parseFloat(e.target.value))}
-                      className="w-20"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant={
-                        vegetable.currentSellingPrice >= vegetable.minPrice && 
-                        vegetable.currentSellingPrice <= vegetable.maxPrice 
-                          ? "default" 
-                          : "destructive"
-                      }
-                    >
-                      {vegetable.currentSellingPrice >= vegetable.minPrice && 
-                       vegetable.currentSellingPrice <= vegetable.maxPrice 
-                        ? "In Range" 
-                        : "Out of Range"}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {vegetables.map((vegetable) => {
+                const currentUpdates = priceUpdates[vegetable.id] || { minPrice: vegetable.minPrice, maxPrice: vegetable.maxPrice };
+                return (
+                  <TableRow key={vegetable.id}>
+                    <TableCell className="font-medium">{vegetable.name}</TableCell>
+                    <TableCell>
+                      <Input
+                        type="number"
+                        value={currentUpdates.minPrice}
+                        onChange={(e) => updatePriceInput(vegetable.id, 'minPrice', parseFloat(e.target.value))}
+                        className="w-20"
+                        placeholder={vegetable.minPrice.toString()}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Input
+                        type="number"
+                        value={currentUpdates.maxPrice}
+                        onChange={(e) => updatePriceInput(vegetable.id, 'maxPrice', parseFloat(e.target.value))}
+                        className="w-20"
+                        placeholder={vegetable.maxPrice.toString()}
+                      />
+                    </TableCell>
+                    <TableCell>₹{vegetable.currentSellingPrice}</TableCell>
+                    <TableCell>
+                      <Button
+                        size="sm"
+                        onClick={() => updateVegetablePrices(vegetable.id)}
+                        disabled={!priceUpdates[vegetable.id]}
+                        className="bg-primary text-primary-foreground hover:bg-primary/90"
+                      >
+                        Update
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </CardContent>

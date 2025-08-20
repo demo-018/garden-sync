@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { useToast } from "@/hooks/use-toast";
 import { getOrdersForPackaging, demoOrders, Order, OrderItem } from "@/data/demoData";
@@ -126,7 +127,13 @@ export function PackOrderDetails() {
   const { toast } = useToast();
   
   const order = demoOrders.find(o => o.id === orderId);
-  const [orderItems, setOrderItems] = useState<OrderItem[]>(order?.items || []);
+  interface OrderItemWithAvailability extends OrderItem {
+    available: boolean;
+  }
+  
+  const [orderItems, setOrderItems] = useState<OrderItemWithAvailability[]>(
+    order?.items.map(item => ({ ...item, available: true })) || []
+  );
 
   if (!order) {
     return (
@@ -147,6 +154,20 @@ export function PackOrderDetails() {
     });
     // TODO: API call to remove item
     // await removeOrderItemAPI(orderId, itemId);
+  };
+
+  const toggleItemAvailability = (itemId: string) => {
+    setOrderItems(prev => prev.map(item => 
+      item.id === itemId 
+        ? { ...item, available: !item.available }
+        : item
+    ));
+    toast({
+      title: "Item Availability Updated",
+      description: "Item availability has been updated",
+    });
+    // TODO: API call to update item availability
+    // await updateItemAvailabilityAPI(orderId, itemId, availability);
   };
 
   const markOrderPacked = () => {
@@ -194,6 +215,7 @@ export function PackOrderDetails() {
                   <TableHead>Quantity</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Total</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -205,13 +227,27 @@ export function PackOrderDetails() {
                     <TableCell>₹{item.price}</TableCell>
                     <TableCell>₹{item.quantity * item.price}</TableCell>
                     <TableCell>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => removeItem(item.id)}
-                      >
-                        Remove
-                      </Button>
+                      <Badge variant={item.available ? "default" : "secondary"}>
+                        {item.available ? "Available" : "Unavailable"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => toggleItemAvailability(item.id)}
+                        >
+                          Mark {item.available ? 'Unavailable' : 'Available'}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => removeItem(item.id)}
+                        >
+                          Remove
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
