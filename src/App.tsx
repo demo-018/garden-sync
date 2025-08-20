@@ -3,7 +3,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import { Navigation } from "./components/navigation";
+import AdminDashboard from "./pages/AdminDashboard";
+import PackagingDashboard, { PackOrderDetails } from "./pages/PackagingDashboard";
+import DeliveryDashboard, { DeliveryOrderDetails } from "./pages/DeliveryDashboard";
+import ManagerDashboard from "./pages/ManagerDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -14,11 +18,20 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div className="min-h-screen bg-background">
+          <Navigation />
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <Routes>
+              <Route path="/" element={<AdminDashboard />} />
+              <Route path="/packorders" element={<PackagingDashboard />} />
+              <Route path="/packorder/:orderId" element={<PackOrderDetails />} />
+              <Route path="/deliveryorders" element={<DeliveryDashboard />} />
+              <Route path="/deliveryorder/:orderId" element={<DeliveryOrderDetails />} />
+              <Route path="/manager" element={<ManagerDashboard />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

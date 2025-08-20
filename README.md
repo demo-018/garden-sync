@@ -1,73 +1,142 @@
-# Welcome to your Lovable project
+# VegDelivery Admin System
 
-## Project info
+A comprehensive admin system for vegetable delivery startup with role-based dashboards and functionality.
 
-**URL**: https://lovable.dev/projects/d38a0afb-efe4-4529-bd18-dda7a483859c
+## Features
 
-## How can I edit this code?
+### Admin Dashboard
+- View and manage all orders (accept/reject placed orders)
+- User management and role promotion
+- Promote customers to packaging or delivery employees
+- Overview of total orders and users
 
-There are several ways of editing your application.
+### Packaging Employee Dashboard
+- View orders ready for packaging (`/packorders`)
+- Individual order details with item management (`/packorder/:orderId`)
+- Update order status to packed or cancel orders
+- Remove specific items from orders
 
-**Use Lovable**
+### Delivery Employee Dashboard
+- View assigned orders ready for delivery (`/deliveryorders`)
+- Individual delivery order details (`/deliveryorder/:orderId`)
+- Update order status from packed to delivered or cancelled
+- Customer contact and address information
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d38a0afb-efe4-4529-bd18-dda7a483859c) and start prompting.
+### Manager Dashboard
+- Assign packed orders to delivery employees
+- View vegetable requirements calculated from today's delivery orders
+- Update vegetable buy status and prices
+- Manage min/max price ranges for vegetables
+- Dashboard with key metrics and statistics
 
-Changes made via Lovable will be committed automatically to this repo.
+## Current Implementation
 
-**Use your preferred IDE**
+The system uses demo data and is ready for API integration. All functionality is implemented with local state management and toast notifications.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Demo Data Structure
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Users**: Different roles (admin, customer, packaging, delivery, manager)
+- **Orders**: Various statuses (placed, accepted, packed, assigned, delivered, cancelled)
+- **Vegetables**: Price management and buy status tracking
+- **Order Items**: Vegetable quantities and pricing
 
-Follow these steps:
+## API Integration Setup
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+All components include TODO comments indicating where API calls should be implemented:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Required API Endpoints
 
-# Step 3: Install the necessary dependencies.
-npm i
+#### Order Management
+```typescript
+// Update order status
+await updateOrderStatusAPI(orderId: string, newStatus: OrderStatus);
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+// Assign order to delivery employee
+await assignOrderToDeliveryAPI(orderId: string, employeeId: string);
+
+// Remove item from order
+await removeOrderItemAPI(orderId: string, itemId: string);
 ```
 
-**Edit a file directly in GitHub**
+#### User Management
+```typescript
+// Update user role
+await updateUserRoleAPI(userId: string, newRole: UserRole);
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+#### Vegetable Management
+```typescript
+// Update vegetable prices
+await updateVegetablePriceAPI(vegId: string, field: string, value: number);
 
-**Use GitHub Codespaces**
+// Update buy status
+await updateVegetableBuyStatusAPI(vegId: string, buyPrice: number, isBought: boolean);
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+#### Data Fetching
+```typescript
+// Get orders by status
+await getOrdersByStatusAPI(status: OrderStatus);
 
-## What technologies are used for this project?
+// Get users by role
+await getUsersByRoleAPI(role: UserRole);
 
-This project is built with:
+// Get vegetable requirements for date
+await getVegetableRequirementsAPI(date: string);
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+// Get all vegetables
+await getVegetablesAPI();
+```
 
-## How can I deploy this project?
+## Project Structure
 
-Simply open [Lovable](https://lovable.dev/projects/d38a0afb-efe4-4529-bd18-dda7a483859c) and click on Share -> Publish.
+```
+src/
+├── components/
+│   ├── ui/                 # Shadcn UI components
+│   ├── navigation.tsx      # Main navigation component
+│   └── status-badge.tsx    # Order status badge component
+├── data/
+│   └── demoData.ts        # Demo data and helper functions
+├── pages/
+│   ├── AdminDashboard.tsx      # Admin functionality
+│   ├── PackagingDashboard.tsx  # Packaging employee features
+│   ├── DeliveryDashboard.tsx   # Delivery employee features
+│   └── ManagerDashboard.tsx    # Manager functionality
+└── hooks/                 # Custom hooks
+```
 
-## Can I connect a custom domain to my Lovable project?
+## Design System
 
-Yes, you can!
+The application uses a vegetable-themed design system with:
+- **Primary**: Fresh green colors (#22c55e HSL equivalent)
+- **Success**: Green for positive actions
+- **Warning**: Orange/amber for attention items
+- **Info**: Blue for informational elements
+- **Destructive**: Red for dangerous actions
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+All colors are defined using HSL values in the design system and are fully responsive.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Technology Stack
+
+- **React** with TypeScript
+- **Vite** for development and building
+- **Tailwind CSS** for styling
+- **Shadcn/UI** for component library
+- **React Router** for navigation
+- **Lucide React** for icons
+
+## Getting Started
+
+1. Install dependencies: `npm install`
+2. Start development server: `npm run dev`
+3. Build for production: `npm run build`
+
+## Next Steps for API Integration
+
+1. Replace demo data imports with API calls
+2. Implement error handling and loading states
+3. Add authentication and authorization
+4. Set up proper state management (Redux/Zustand if needed)
+5. Add data validation and form handling
+6. Implement real-time updates for order status changes
