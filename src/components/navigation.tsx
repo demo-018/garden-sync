@@ -52,7 +52,7 @@ export function Navigation() {
             <div className="flex-shrink-0 flex items-center">
               <h1 className="text-xl font-bold text-primary">VegDelivery Admin</h1>
             </div>
-            <div className="ml-6 flex space-x-4 overflow-x-auto">
+            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               {navigation.map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
@@ -60,7 +60,7 @@ export function Navigation() {
                     key={item.name}
                     to={item.href}
                     className={cn(
-                      "inline-flex items-center px-3 py-2 border-b-2 text-sm font-medium whitespace-nowrap",
+                      "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium",
                       isActive
                         ? "border-primary text-primary"
                         : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground"
