@@ -11,7 +11,7 @@ import {
   Settings,
   LogOut
 } from "lucide-react";
-import indiVegLogo from '@/assets/indiveg-logo.png';
+import indiVegLogo from '@/assets/indiveg-logo-new.png';
 
 export function Navigation() {
   const location = useLocation();

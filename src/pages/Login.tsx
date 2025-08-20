@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { Leaf } from 'lucide-react';
-import indiVegLogo from '@/assets/indiveg-logo.png';
+import indiVegLogo from '@/assets/indiveg-logo-new.png';
 
 export default function Login() {
   const [email, setEmail] = useState('');
