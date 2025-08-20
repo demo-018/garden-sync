@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -32,6 +34,7 @@ import {
 export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>(demoOrders);
   const [users, setUsers] = useState<User[]>(demoUsers);
+  const [userSearchPhone, setUserSearchPhone] = useState("");
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -62,6 +65,11 @@ export default function AdminDashboard() {
     // TODO: API call to update user role
     // await updateUserRoleAPI(userId, newRole);
   };
+
+  // Filter users based on phone search
+  const filteredUsers = users.filter(user =>
+    user.phone.toLowerCase().includes(userSearchPhone.toLowerCase())
+  );
 
   const placedOrders = orders.filter(order => order.status === 'placed');
   const totalOrders = orders.length;
@@ -170,6 +178,17 @@ export default function AdminDashboard() {
           <CardTitle>User Management</CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="mb-4">
+            <Label htmlFor="phone-search">Search by Phone Number</Label>
+            <Input
+              id="phone-search"
+              type="text"
+              placeholder="Enter phone number to search..."
+              value={userSearchPhone}
+              onChange={(e) => setUserSearchPhone(e.target.value)}
+              className="max-w-sm"
+            />
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
@@ -181,7 +200,7 @@ export default function AdminDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
